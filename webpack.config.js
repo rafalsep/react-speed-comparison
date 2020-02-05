@@ -17,6 +17,12 @@ module.exports = {
   devServer: {
     contentBase: dir_build,
   },
+  resolve: {
+    alias: {
+      'react-dom$': 'react-dom/profiling',
+      'scheduler/tracing': 'scheduler/tracing-profiling',
+    }
+  },
   module: {
     rules: [
       {
@@ -44,9 +50,9 @@ module.exports = {
     // new CopyWebpackPlugin([{
     //     from: dir_html
     // }]),
-    // new webpack.DefinePlugin({
-    //   'process.env.NODE_ENV': JSON.stringify('production')
-    // }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
     // UglifyJS won't work well with ES6 code
     // new webpack.optimize.UglifyJsPlugin({
     //   sourceMap: false,

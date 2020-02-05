@@ -1,13 +1,24 @@
-import React, { Component } from "react";
+import React, {Component, PureComponent} from "react";
 import workHard from "../workHard";
+import package2 from '../../package-lock';
 
-export default class Stateful extends Component {
+const aa = JSON.stringify(package2);
+
+class Stateful extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
         workHard();
-        return <div >Hello Cmp1: stateful</div>;
+        return <div>Hello Cmp1: stateful {this.props.iteration} {aa}</div>;
     }
 }
+
+Stateful.defaultProps = {
+    test: 'test',
+    test2: 'test2',
+    test3: 'test3',
+};
+
+export default Stateful;

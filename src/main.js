@@ -9,6 +9,7 @@ import Pure from './components/Pure';
 import Stateful from './components/Stateful';
 import Stateless from './components/Stateless';
 import testPerformance from './testPerformance';
+import FunctionalVsClass from './functionalVsClass';
 
 let prevTime;
 
@@ -30,8 +31,22 @@ const todos = (state = { awe: { cc: 'cc' } }, action) => {
   }
 };
 
+const funcVsClass = (state = { diff: [] }, action) => {
+  switch (action.type) {
+    case 'RENDER_FUNCTIONAL_START':
+      return { ...state, start: action.start };
+    case 'RENDER_FUNCTIONAL':
+      return { ...state, iteration: action.iteration };
+    case 'RENDER_FUNCTIONAL_END':
+      return { ...state, diff: [...state.diff, action.end] };
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
-  todos
+  todos,
+  funcVsClass
 });
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
@@ -44,7 +59,7 @@ const store = createStore(rootReducer, {}, composeEnhancers(applyMiddleware(thun
 
 const selectorM = createSelector(
   state => state.todos,
-    todos => todos.text
+  todos => todos.text
 );
 
 const mapStateToProps = state => ({ text: state.todos.text });
@@ -69,35 +84,17 @@ const mapDispatchToProps = dispatch => ({
 
 let a = 0;
 
-const Main = ({ actions, text }) => {
-  //console.log('render');
-  const [showStateless, toggleStateless] = useState(0);
-
-  const renderStatelessComponent = () => {
-    for (let i = 0; i < 10; i++) testPerformance(Stateful);
-  };
-
-  const renderStatelessComponent2 = () => {
-    //for (let i = 0; i < 10000; i++) {
-    const test = {};
-    actions.addTodo(test);
-    //}
-  };
-
+const App = () => {
   return (
     <div>
-      <button onClick={renderStatelessComponent2}>render Stateless</button>
-      <div id="pureVsStateless"></div>
-      {/*{text}*/}
+      <FunctionalVsClass />
     </div>
   );
 };
 
-const MainConnect = connect(mapStateToProps, mapDispatchToProps)(Main);
-
 render(
   <Provider store={store}>
-    <MainConnect />
+    <App />
   </Provider>,
   document.getElementById('main')
 );
